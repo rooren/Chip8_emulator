@@ -70,3 +70,64 @@ Chip8::Chip8()
 		memory[FONTSET_START_ADDRESS + i] = fontset[i];
 	}
 }
+
+//00E0: CLS
+void Chip8::OP_00E0()
+{
+	memset(video, 0, sizeof(video));
+}
+
+//00EE: RET
+void Chip8::OP_00EE()
+{
+	--sp;
+	pc = stack[sp];
+}
+
+//1nnn: JP addr
+void Chip8::OP_1nnn()
+{
+	// Extracts the memory address portion from the 16-bit opcode
+	uint16_t address = opcode & 0x0FFFu;
+
+	pc = address;
+}
+//2nnn - CALL addr
+void Chip8::OP_2nnn()
+{
+	// Extracts the memory address portion from the 16-bit opcode
+	uint16_t address = opcode & 0x0FFFu;
+
+	stack[sp] = pc;
+	++sp;
+	pc = address;
+}
+//3xkk - SE Vx, byte
+//Skip next instruction if Vx = kk.
+void Chip8::OP_3xkk()
+{
+	// Etract the Vx part of the opcode
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	// Extract kk part of the opcode
+	uint8_t byte = opcode & 0x00FFu;
+
+	if (registers[Vx] == byte)
+	{
+		// Size of the instruction is 2 Bytes => in order to skip an instruction we need to increase by 2 
+		pc += 2;
+	}
+}
+
+//4xkk - SNE Vx, byte
+//Skip next instruction if Vx != kk.
+void Chip8::OP_4xkk()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t byte = opcode & 0x00FFu;
+
+	if (registers[Vx] != byte)
+	{
+		// Size of the instruction is 2 Bytes => in order to skip an instruction we need to increase by 2 
+		pc += 2;
+	}
+}
