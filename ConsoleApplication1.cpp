@@ -3,14 +3,11 @@
 
 #include <iostream>
 #include "Chip8.h"
-
+ 
 int main()
 {
-    int x = 5;
-    int z = x * 2;
-    std::cout << "Hello World!\n" << z;
-
     std::cout << "Hello World!\n";
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

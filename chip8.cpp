@@ -131,3 +131,239 @@ void Chip8::OP_4xkk()
 		pc += 2;
 	}
 }
+
+// 5xy0 - SE Vx, Vy
+// Skip next instruction if Vx = Vy.
+void Chip8::OP_5xy0()
+{
+	// Extract Vx and Vy using bitmask
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	if (registers[Vx] == registers[Vy])
+	{
+		pc += 2;
+	}
+}
+
+// 6xkk - LD Vx, byte
+// Set register x to kk
+void Chip8::OP_6xkk()
+{
+	// Extract Vx and byte using bitmask
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t byte = opcode & 0x00FFu;
+
+	registers[Vx] = byte;
+}
+
+// 7xkk - ADD Vx, byte
+// Add register x to kk
+void Chip8::OP_7xkk()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t byte = opcode & 0x00FFu;
+
+	registers[Vx] += byte;
+}
+
+// 8xy0 - LD Vx, Vy
+// Set register x to y
+void Chip8::OP_8xy0()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	registers[Vx] = registers[Vy];
+}
+
+// 8xy1 - OR Vx, Vy
+// Or between x and y 
+void Chip8::OP_8xy1()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	registers[Vx] |= registers[Vy];
+}
+// 8xy3 - XOR Vx, Vy
+// Xor between x and y 
+void Chip8::OP_8xy3()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	registers[Vx] ^= registers[Vy];
+}
+
+// 8xy4 - ADD Vx, Vy
+// Add register x to y
+void Chip8::OP_8xy4()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	uint16_t sum = registers[Vx] + registers[Vy];
+
+	
+	// If the sum is greater than what can fit into a byte (255),
+	// register VF will be set to 1 as an overflow flag.
+	if (sum > 255U)
+	{
+		registers[0xF] = 1;
+	}
+	else
+	{
+		registers[0xF] = 0;
+	}
+
+	registers[Vx] = sum & 0xFFu;
+}
+
+// 8xy5 - SUB Vx, Vy
+// Sub register x to y
+
+void Chip8::OP_8xy5()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	// if result is negetive raise flag
+	if (registers[Vx] > registers[Vy])
+	{
+		registers[0xF] = 1;
+	}
+	else
+	{
+		registers[0xF] = 0;
+	}
+
+	registers[Vx] -= registers[Vy];
+}
+
+// 8xy6 - SHR Vx
+// Set Vx = Vx SHR 1. Save LSB in VF
+void Chip8::OP_8xy6()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	// Save LSB in VF
+	registers[0xF] = (registers[Vx] & 0x1u);
+
+	registers[Vx] >>= 1;
+}
+
+// 8xy7 - SUBN Vx, Vy
+// Set Vx = Vy - Vx, set VF = NOT borrow.
+void Chip8::OP_8xy7()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	// If Vy > Vx, then VF is set to 1
+	if (registers[Vy] > registers[Vx])
+	{
+		registers[0xF] = 1;
+	}
+	else
+	{
+		registers[0xF] = 0;
+	}
+
+	registers[Vx] = registers[Vy] - registers[Vx];
+}
+
+
+// 8xyE - SHL Vx {, Vy}
+// Set Vx = Vx SHL 1.
+void Chip8::OP_8xyE()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	// Save MSB in VF
+	registers[0xF] = (registers[Vx] & 0x80u) >> 7u;
+
+	registers[Vx] <<= 1;
+}
+
+// 9xy0 - SNE Vx, Vy
+// Skip next instruction if Vx != Vy.
+void Chip8::OP_9xy0()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+
+	if (registers[Vx] != registers[Vy])
+	{
+		pc += 2;
+	}
+}
+
+// Annn - LD I, addr
+// Set I = nnn.
+// I is a special register used to store memory addresses for use in operations
+void Chip8::OP_Annn()
+{
+	uint16_t address = opcode & 0x0FFFu;
+
+	index = address;
+}
+
+// Bnnn - JP V0, addr
+// Jump to location nnn + V0.
+void Chip8::OP_Bnnn()
+{
+	uint16_t address = opcode & 0x0FFFu;
+
+	pc = registers[0] + address;
+}
+
+// Cxkk - RND Vx, byte
+/* TODO: ADD RANDBYTE MODUALE
+void Chip8::OP_Cxkk()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t byte = opcode & 0x00FFu;
+
+	registers[Vx] = randByte(randGen) & byte;
+}
+*/
+
+//Dxyn - DRW Vx, Vy, nibble
+/* TODO: ADD Rendering module (using SDL)
+void Chip8::OP_Dxyn()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	uint8_t height = opcode & 0x000Fu;
+
+	// Wrap if going beyond screen boundaries
+	uint8_t xPos = registers[Vx] % VIDEO_WIDTH;
+	uint8_t yPos = registers[Vy] % VIDEO_HEIGHT;
+
+	registers[0xF] = 0;
+
+	for (unsigned int row = 0; row < height; ++row)
+	{
+		uint8_t spriteByte = memory[index + row];
+
+		for (unsigned int col = 0; col < 8; ++col)
+		{
+			uint8_t spritePixel = spriteByte & (0x80u >> col);
+			uint32_t* screenPixel = &video[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
+
+			// Sprite pixel is on
+			if (spritePixel)
+			{
+				// Screen pixel also on - collision
+				if (*screenPixel == 0xFFFFFFFF)
+				{
+					registers[0xF] = 1;
+				}
+
+				// Effectively XOR with the sprite pixel
+				*screenPixel ^= 0xFFFFFFFF;
+			}
+		}
+	}
+}
+*/
