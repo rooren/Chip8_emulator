@@ -2,8 +2,10 @@
 //
 
 #include <iostream>
-#include "Chip8.h"
- 
+#include "chip8.h"
+
+#include <SDL2/SDL.h>
+
 int main()
 {
     std::cout << "Hello World!\n";
