@@ -46,7 +46,7 @@ void Chip8::LoadROM(char const* filename)
 			// Load the ROM contents into the Chip8's memory, starting at 0x200
 			for (long i = 0; i < size; i++)
 			{
-				//Chip8’s memory from 0x000 to 0x1FF is reserved, 
+				//Chip8ï¿½s memory from 0x000 to 0x1FF is reserved, 
 				memory[START_ADDRESS + i] = buffer[i];
 			}
 
@@ -61,6 +61,8 @@ void Chip8::LoadROM(char const* filename)
 
 Chip8::Chip8()
 {
+	// Initialize RNG
+	randByte = std::uniform_int_distribution<uint8_t>(0, 255U);
 
 	// Initialize PC - Program Counter
 	pc = START_ADDRESS;
@@ -318,22 +320,23 @@ void Chip8::OP_Bnnn()
 }
 
 // Cxkk - RND Vx, byte
-/* TODO: ADD RANDBYTE MODUALE
 void Chip8::OP_Cxkk()
 {
 	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
 	uint8_t byte = opcode & 0x00FFu;
-
 	registers[Vx] = randByte(randGen) & byte;
 }
-*/
 
-//Dxyn - DRW Vx, Vy, nibble
-/* TODO: ADD Rendering module (using SDL)
+
+// Dxyn - DRW Vx, Vy, nibble
+// Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision.
 void Chip8::OP_Dxyn()
 {
+
+	// Get from opcode registers for x and y position	
 	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
 	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	
 	uint8_t height = opcode & 0x000Fu;
 
 	// Wrap if going beyond screen boundaries
@@ -344,6 +347,7 @@ void Chip8::OP_Dxyn()
 
 	for (unsigned int row = 0; row < height; ++row)
 	{
+		// add Index offset as to read the sprite data
 		uint8_t spriteByte = memory[index + row];
 
 		for (unsigned int col = 0; col < 8; ++col)
@@ -366,4 +370,41 @@ void Chip8::OP_Dxyn()
 		}
 	}
 }
-*/
+
+// Ex9E - SKP Vx
+// Skip next instruction if key with the value of Vx is pressed.
+void Chip8::OP_Ex9E()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	uint8_t key = registers[Vx];
+
+	if (keypad[key])
+	{
+		pc += 2;
+	}
+}
+
+// ExA1 - SKNP Vx
+// Skip next instruction if key with the value of Vx is not pressed.
+void Chip8::OP_ExA1()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	uint8_t key = registers[Vx];
+
+	if (!keypad[key])
+	{
+		pc += 2;
+	}
+}
+
+// Fx07 - LD Vx, DT
+// Set Vx = delay timer value.
+void Chip8::OP_Fx07()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	registers[Vx] = delayTimer;
+}
+

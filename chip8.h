@@ -1,7 +1,11 @@
 #pragma once
 #include <cstdint>
 #include <cstring>
+#include <chrono>
+#include <random>
 
+const unsigned int VIDEO_HEIGHT = 32;
+const unsigned int VIDEO_WIDTH = 64;
 class Chip8
 {
 public:
@@ -16,6 +20,8 @@ public:
 	uint8_t keypad[16]{};
 	uint32_t video[64 * 32]{};
 	uint16_t opcode;
+	std::default_random_engine randGen;
+	std::uniform_int_distribution<uint8_t> randByte;
 	void LoadROM(char const* filename);
 	void OP_00E0();
 	void OP_00EE();
@@ -39,6 +45,8 @@ public:
 	void OP_Bnnn();
 	void OP_Cxkk();
 	void OP_Dxyn();
-	Chip8();
-
+    void OP_Ex9E();
+    void OP_ExA1();
+    void OP_Fx07();
+    Chip8();
 };

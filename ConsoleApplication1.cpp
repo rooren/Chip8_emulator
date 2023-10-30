@@ -8,8 +8,48 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    // Basic check of SDL lib
+
+    std::cout << "Hello World2 !\n";
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        // Handle initialization error
+        return 1;
+    }
+
+    // Create a window
+    SDL_Window* window = SDL_CreateWindow("SDL Example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    if (!window) {
+        // Handle window creation error
+        return 1;
+    }
+
+    // Create a renderer for the window
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        // Handle renderer creation error
+        return 1;
+    }
+
+    // Set the draw color to red
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+    // Clear the screen
+    SDL_RenderClear(renderer);
+
+    // Update the screen
+    SDL_RenderPresent(renderer);
+
+    // Wait for a few seconds to display the window
+    SDL_Delay(3000);
+
+    // Cleanup and quit SDL
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
     return 0;
+    //return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

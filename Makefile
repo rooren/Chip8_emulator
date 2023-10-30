@@ -9,7 +9,7 @@ SOURCES = chip8.cpp ConsoleApplication1.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Main target
-TARGET = console_app
+TARGET = chip8
 
 all: $(TARGET)
 
