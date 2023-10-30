@@ -320,6 +320,7 @@ void Chip8::OP_Bnnn()
 }
 
 // Cxkk - RND Vx, byte
+// Randomise byte vx
 void Chip8::OP_Cxkk()
 {
 	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
@@ -343,6 +344,7 @@ void Chip8::OP_Dxyn()
 	uint8_t xPos = registers[Vx] % VIDEO_WIDTH;
 	uint8_t yPos = registers[Vy] % VIDEO_HEIGHT;
 
+	// reset flag to 0
 	registers[0xF] = 0;
 
 	for (unsigned int row = 0; row < height; ++row)
@@ -408,3 +410,157 @@ void Chip8::OP_Fx07()
 	registers[Vx] = delayTimer;
 }
 
+// Fx0A - LD Vx, K
+// Wait for a key press, store the value of the key in Vx.
+void Chip8::OP_Fx0A()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	if (keypad[0])
+	{
+		registers[Vx] = 0;
+	}
+	else if (keypad[1])
+	{
+		registers[Vx] = 1;
+	}
+	else if (keypad[2])
+	{
+		registers[Vx] = 2;
+	}
+	else if (keypad[3])
+	{
+		registers[Vx] = 3;
+	}
+	else if (keypad[4])
+	{
+		registers[Vx] = 4;
+	}
+	else if (keypad[5])
+	{
+		registers[Vx] = 5;
+	}
+	else if (keypad[6])
+	{
+		registers[Vx] = 6;
+	}
+	else if (keypad[7])
+	{
+		registers[Vx] = 7;
+	}
+	else if (keypad[8])
+	{
+		registers[Vx] = 8;
+	}
+	else if (keypad[9])
+	{
+		registers[Vx] = 9;
+	}
+	else if (keypad[10])
+	{
+		registers[Vx] = 10;
+	}
+	else if (keypad[11])
+	{
+		registers[Vx] = 11;
+	}
+	else if (keypad[12])
+	{
+		registers[Vx] = 12;
+	}
+	else if (keypad[13])
+	{
+		registers[Vx] = 13;
+	}
+	else if (keypad[14])
+	{
+		registers[Vx] = 14;
+	}
+	else if (keypad[15])
+	{
+		registers[Vx] = 15;
+	}
+	else
+	{
+		// if no key was pressed re-do this instruction - "wait"
+		pc -= 2;
+	}
+}
+
+// Fx15 - LD DT, Vx
+// Set delay timer = Vx.
+void Chip8::OP_Fx15()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	delayTimer = registers[Vx];
+}
+
+// Fx18 - LD ST, Vx
+// Set sound timer = Vx.
+void Chip8::OP_Fx18()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	soundTimer = registers[Vx];
+}
+
+// Fx1E - ADD I, Vx
+// Set I = I + Vx.
+void Chip8::OP_Fx1E()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	index += registers[Vx];
+}
+
+// Fx29 - LD F, Vx
+// Set I = location of sprite for digit Vx.
+void Chip8::OP_Fx29()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t digit = registers[Vx];
+
+	index = FONTSET_START_ADDRESS + (5 * digit);
+}
+
+// Fx33 - LD B, Vx
+// Store BCD representation of Vx in memory locations I, I+1, and I+2.
+void Chip8::OP_Fx33()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t value = registers[Vx];
+
+	// Ones-place
+	memory[index + 2] = value % 10;
+	value /= 10;
+
+	// Tens-place
+	memory[index + 1] = value % 10;
+	value /= 10;
+
+	// Hundreds-place
+	memory[index] = value % 10;
+}
+// Fx55 - LD [I], Vx
+// Store registers V0 through Vx in memory starting at location I.
+void Chip8::OP_Fx55()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	for (uint8_t i = 0; i <= Vx; ++i)
+	{
+		memory[index + i] = registers[i];
+	}
+}
+
+// Fx65 - LD Vx, [I]
+// Read registers V0 through Vx from memory starting at location I.
+void Chip8::OP_Fx65()
+{
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	for (uint8_t i = 0; i <= Vx; ++i)
+	{
+		registers[i] = memory[index + i];
+	}
+}

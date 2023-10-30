@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include "chip8.h"
-
 #include <SDL2/SDL.h>
 
 int main()
