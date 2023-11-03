@@ -3,7 +3,7 @@ CXXFLAGS = -std=c++11
 LDFLAGS = -lSDL2
 
 # List of source files
-SOURCES = chip8.cpp ConsoleApplication1.cpp
+SOURCES = chip8.cpp Chip8Main.cpp
 
 # Derive the object files from source files
 OBJECTS = $(SOURCES:.cpp=.o)

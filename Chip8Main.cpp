@@ -1,4 +1,4 @@
-// ConsoleApplication1.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
@@ -9,7 +9,7 @@ int main()
 {
     // Basic check of SDL lib
 
-    std::cout << "Hello World2 !\n";
+    std::cout << "Hello World3 !\n";
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         // Handle initialization error
