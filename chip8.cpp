@@ -134,30 +134,26 @@ void Chip8::TableF() { ((*this).*(tableF[opcode & 0x00FFu]))(); }
 
 void Chip8::OP_NULL() {}
 
-void Chip8::Cycle()
-{
-	// Fetch
-	opcode = (memory[pc] << 8u) | memory[pc + 1];
+void Chip8::Cycle() {
+  // Fetch
+  opcode = (memory[pc] << 8u) | memory[pc + 1];
 
-	// Increment the PC before we execute anything
-	pc += 2;
+  // Increment the PC before we execute anything
+  pc += 2;
 
-	// Decode and Execute
-	((*this).*(table[(opcode & 0xF000u) >> 12u]))();
+  // Decode and Execute
+  ((*this).*(table[(opcode & 0xF000u) >> 12u]))();
 
-	// Decrement the delay timer if it's been set
-	if (delayTimer > 0)
-	{
-		--delayTimer;
-	}
+  // Decrement the delay timer if it's been set
+  if (delayTimer > 0) {
+    --delayTimer;
+  }
 
-	// Decrement the sound timer if it's been set
-	if (soundTimer > 0)
-	{
-		--soundTimer;
-	}
+  // Decrement the sound timer if it's been set
+  if (soundTimer > 0) {
+    --soundTimer;
+  }
 }
-
 
 // 00E0: CLS
 void Chip8::OP_00E0() { memset(video, 0, sizeof(video)); }
