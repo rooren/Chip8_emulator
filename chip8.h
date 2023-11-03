@@ -19,6 +19,7 @@ public:
   uint8_t keypad[16]{};
   uint32_t video[64 * 32]{};
   uint16_t opcode;
+
   std::default_random_engine randGen;
   std::uniform_int_distribution<uint8_t> randByte;
   typedef void (Chip8::*Chip8Func)();
@@ -70,6 +71,10 @@ public:
   void TableE();
   void TableF();
   void OP_NULL();
+  void Cycle();
+  void Fetch();
+  Chip8Func Decode();
+  void Execute(Chip8Func handler);
 };
 
 /*
