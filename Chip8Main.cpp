@@ -4,60 +4,47 @@
 #include <iostream>
 #include "chip8.h"
 #include <SDL2/SDL.h>
+#include "chip8_IO.cpp"
+#include <chrono>
 
-int main()
+int main(int argc, char** argv)
 {
-    // Basic check of SDL lib
+	if (argc != 4)
+	{
+		std::cerr << "Usage: " << argv[0] << " <Scale> <Delay> <ROM>\n";
+		std::exit(EXIT_FAILURE);
+	}
 
-    std::cout << "Hello World4 !\n";
-    // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        // Handle initialization error
-        return 1;
-    }
+	int videoScale = std::stoi(argv[1]);
+	int cycleDelay = std::stoi(argv[2]);
+	char const* romFilename = argv[3];
 
-    // Create a window
-    SDL_Window* window = SDL_CreateWindow("SDL Example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
-    if (!window) {
-        // Handle window creation error
-        return 1;
-    }
+	chip8_IO platform("CHIP-8 Emulator", VIDEO_WIDTH * videoScale, VIDEO_HEIGHT * videoScale, VIDEO_WIDTH, VIDEO_HEIGHT);
 
-    // Create a renderer for the window
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        // Handle renderer creation error
-        return 1;
-    }
+	Chip8 chip8;
+	chip8.LoadROM(romFilename);
 
-    // Set the draw color to red
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	int videoPitch = sizeof(chip8.video[0]) * VIDEO_WIDTH;
 
-    // Clear the screen
-    SDL_RenderClear(renderer);
+	auto lastCycleTime = std::chrono::high_resolution_clock::now();
+	bool quit = false;
 
-    // Update the screen
-    SDL_RenderPresent(renderer);
+	while (!quit)
+	{
+		quit = platform.ProcessInput(chip8.keypad);
 
-    // Wait for a few seconds to display the window
-    SDL_Delay(3000);
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();
 
-    // Cleanup and quit SDL
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+		if (dt > cycleDelay)
+		{
+			lastCycleTime = currentTime;
 
-    return 0;
-    //return 0;
+			chip8.Cycle();
+
+			platform.Update(chip8.video, videoPitch);
+		}
+	}
+
+	return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
