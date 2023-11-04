@@ -1,4 +1,5 @@
 # CHIP8 Emulator
+![chip8_breakout](https://github.com/rooren/Chip8_emulator/assets/58310236/fff982a5-359b-4d5a-8567-aeac7907da0a)
 
 A simple CHIP8 emulator written in C++ with SDL2.
 
