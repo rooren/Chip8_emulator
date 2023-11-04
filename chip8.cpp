@@ -1,10 +1,12 @@
 #include "chip8.h"
 #include <fstream>
-#include <iostream>
+#define DEBUG_MODE true
+#define DEBUG_OUTPUT(text) do { if (DEBUG_MODE) outfile << text << std::endl; } while (0)
 
 const unsigned int START_ADDRESS = 0x200;
 const unsigned int FONTSET_SIZE = 80;
 const unsigned int FONTSET_START_ADDRESS = 0x50;
+
 uint8_t fontset[FONTSET_SIZE] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -52,6 +54,10 @@ void Chip8::LoadROM(char const *filename) {
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
   }
+}
+
+Chip8::~Chip8() {
+  outfile.close();
 }
 
 Chip8::Chip8() {
@@ -122,6 +128,12 @@ Chip8::Chip8() {
   tableF[0x33] = &Chip8::OP_Fx33;
   tableF[0x55] = &Chip8::OP_Fx55;
   tableF[0x65] = &Chip8::OP_Fx65;
+
+  if(DEBUG_MODE)
+  {
+     outfile.open("Chip8.log");
+  }
+
 }
 
 void Chip8::Table0() { ((*this).*(table0[opcode & 0x000Fu]))(); }
@@ -140,6 +152,8 @@ void Chip8::Cycle() {
 
   // Increment the PC before we execute anything
   pc += 2;
+  DEBUG_OUTPUT("CHIP8: STEP - opcode " + std::to_string(opcode));
+  DEBUG_OUTPUT("CHIP8: PC " + std::to_string(pc));
 
   // Decode and Execute
   ((*this).*(table[(opcode & 0xF000u) >> 12u]))();
@@ -168,22 +182,22 @@ void Chip8::OP_00EE() {
 void Chip8::OP_1nnn() {
   // Extracts the memory address portion from the 16-bit opcode
   uint16_t address = opcode & 0x0FFFu;
-
   pc = address;
+  DEBUG_OUTPUT("CHIP8: JP " + std::to_string(pc));
 }
 // 2nnn - CALL addr
 void Chip8::OP_2nnn() {
   // Extracts the memory address portion from the 16-bit opcode
   uint16_t address = opcode & 0x0FFFu;
-
   stack[sp] = pc;
   ++sp;
   pc = address;
+  DEBUG_OUTPUT("CHIP8: CALL " + std::to_string(pc));
 }
 // 3xkk - SE Vx, byte
 // Skip next instruction if Vx = kk.
 void Chip8::OP_3xkk() {
-  // Etract the Vx part of the opcode
+  // Extract the Vx part of the opcode
   uint8_t Vx = (opcode & 0x0F00u) >> 8u;
   // Extract kk part of the opcode
   uint8_t byte = opcode & 0x00FFu;
@@ -209,6 +223,11 @@ void Chip8::LoadState(const Chip8State& state) {
     memcpy(keypad, state.keypad, sizeof(keypad));
     memcpy(video, state.video, sizeof(video));
     opcode = state.opcode;
+    DEBUG_OUTPUT("CHIP8: LOAD EMULATOR STATE " + std::to_string(pc));
+    DEBUG_OUTPUT("      PC " + std::to_string(pc));
+    DEBUG_OUTPUT("      SP " + std::to_string(sp));
+    DEBUG_OUTPUT("      INDEX " + std::to_string(index));
+    DEBUG_OUTPUT("      OPCODE " + std::to_string(opcode));
 }
 
 // 4xkk - SNE Vx, byte

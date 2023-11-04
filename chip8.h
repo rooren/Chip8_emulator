@@ -4,6 +4,8 @@
 #include <cstring>
 #include <random>
 #include "Chip8State.h"
+#include <iostream>
+#include <fstream>
 
 const unsigned int VIDEO_HEIGHT = 32;
 const unsigned int VIDEO_WIDTH = 64;
@@ -21,6 +23,7 @@ public:
   uint8_t keypad[16]{};
   uint32_t video[64 * 32]{};
   uint16_t opcode;
+  std::ofstream outfile;  // Debug file
 
   std::default_random_engine randGen;
   std::uniform_int_distribution<uint8_t> randByte;
@@ -69,6 +72,7 @@ public:
   void OP_Fx55();
   void OP_Fx65();
   Chip8();
+  ~Chip8();
   void Table0();
   void Table8();
   void TableE();

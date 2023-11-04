@@ -40,16 +40,14 @@ int main(int argc, char** argv)
 		if (SaveState)
 		{
 			savedState = Chip8State(chip8);
-			// Save the savedState object to a file (you can use the SaveState function)
-			// ...
+			// Save the savedState object to a file
 			SaveState = false; // Reset the flag
 		}
 
 		// Handle loading state
 		if (LoadState)
 		{
-			// Load the state from a file into savedState (you can use the LoadState function)
-			// ...
+			// Load the state from a file into savedState
 			chip8.LoadState(savedState);
 			LoadState = false; // Reset the flag
 		}
