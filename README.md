@@ -50,6 +50,7 @@ ROM: Path to the CHIP8 ROM file you want to run.
 The emulator supports the following keyboard controls:
 
 Keyboard Keys: 1, 2, 3, 4, 5, 6, 7, 8, 9, E, Q, R, V, F
+
 Save state: K
 
 Load state: L
