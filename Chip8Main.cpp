@@ -5,6 +5,7 @@
 #include "chip8.h"
 #include <SDL2/SDL.h>
 #include "chip8_IO.cpp"
+#include "Chip8State.h"
 #include <chrono>
 
 int main(int argc, char** argv)
@@ -28,10 +29,30 @@ int main(int argc, char** argv)
 
 	auto lastCycleTime = std::chrono::high_resolution_clock::now();
 	bool quit = false;
-
+	bool SaveState = false;
+	bool LoadState = false;
+	Chip8State savedState;
 	while (!quit)
 	{
-		quit = platform.ProcessInput(chip8.keypad);
+		quit = platform.ProcessInput(chip8.keypad, &SaveState, &LoadState);
+
+		// Handle saving state
+		if (SaveState)
+		{
+			savedState = Chip8State(chip8);
+			// Save the savedState object to a file (you can use the SaveState function)
+			// ...
+			SaveState = false; // Reset the flag
+		}
+
+		// Handle loading state
+		if (LoadState)
+		{
+			// Load the state from a file into savedState (you can use the LoadState function)
+			// ...
+			chip8.LoadState(savedState);
+			LoadState = false; // Reset the flag
+		}
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();

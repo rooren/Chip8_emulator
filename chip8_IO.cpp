@@ -31,7 +31,7 @@ void Update(void const* buffer, int pitch)
 }
 
 
-	bool ProcessInput(uint8_t* keys)
+	bool ProcessInput(uint8_t* keys ,bool* saveStateFlag, bool* loadStateFlag)
 	{
 		bool quit = false;
 
@@ -133,6 +133,15 @@ void Update(void const* buffer, int pitch)
 						case SDLK_v:
 						{
 							keys[0xF] = 1;
+						} break;
+						case SDLK_k: // Press 'k' to save state
+						{
+							*saveStateFlag = true;
+						} break;
+
+						case SDLK_l: // Press 'l' to load state
+						{
+							*loadStateFlag = true;
 						} break;
 					}
 				} break;

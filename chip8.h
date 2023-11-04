@@ -3,9 +3,11 @@
 #include <cstdint>
 #include <cstring>
 #include <random>
+#include "Chip8State.h"
 
 const unsigned int VIDEO_HEIGHT = 32;
 const unsigned int VIDEO_WIDTH = 64;
+class Chip8State;
 class Chip8 {
 public:
   uint8_t registers[16]{};
@@ -36,6 +38,7 @@ public:
   void OP_1nnn();
   void OP_2nnn();
   void OP_3xkk();
+  void LoadState(const Chip8State &state);
   void OP_4xkk();
   void OP_5xy0();
   void OP_6xkk();

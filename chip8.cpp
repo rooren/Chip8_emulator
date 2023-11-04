@@ -42,7 +42,7 @@ void Chip8::LoadROM(char const *filename) {
 
       // Load the ROM contents into the Chip8's memory, starting at 0x200
       for (long i = 0; i < size; i++) {
-        // Chip8�s memory from 0x000 to 0x1FF is reserved,
+        // Chip8s memory from 0x000 to 0x1FF is reserved,
         memory[START_ADDRESS + i] = buffer[i];
       }
 
@@ -193,6 +193,22 @@ void Chip8::OP_3xkk() {
     // need to increase by 2
     pc += 2;
   }
+}
+
+// Function to load the emulator state from a Chip8State object
+void Chip8::LoadState(const Chip8State& state) {
+    // Copy the state from the Chip8State object to the emulator
+    memcpy(registers, state.registers, sizeof(registers));
+    memcpy(memory, state.memory, sizeof(memory));
+    index = state.index;
+    pc = state.pc;
+    memcpy(stack, state.stack, sizeof(stack));
+    sp = state.sp;
+    delayTimer = state.delayTimer;
+    soundTimer = state.soundTimer;
+    memcpy(keypad, state.keypad, sizeof(keypad));
+    memcpy(video, state.video, sizeof(video));
+    opcode = state.opcode;
 }
 
 // 4xkk - SNE Vx, byte
