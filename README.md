@@ -67,6 +67,7 @@ To load a previously saved state, press the 'L' key.
 ## Logging
 The emulator includes logging functionality for debugging. It outputs information about the executed CHIP8 instructions to the console.
 To enable or disable logging, modify the DEBUG_OUTPUT definition in the source code (under chip8.cpp).
+![image](https://github.com/rooren/Chip8_emulator/assets/58310236/d9dc0390-4959-4d87-9283-205a28d93654)
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
