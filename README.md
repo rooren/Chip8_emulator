@@ -40,9 +40,11 @@ To run a CHIP8 ROM, use the following command, replacing <ROM> with the path to 
 ./chip8 <Scale> <Delay> <ROM>
 ```
 
-<Scale>: Scaling factor for the emulator window (e.g., 5 for 5x scale).
-<Delay>: Cycle delay in milliseconds (e.g., 2 for 2 ms).
-<ROM>: Path to the CHIP8 ROM file you want to run.
+Scale: Scaling factor for the emulator window (e.g., 5 for 5x scale).
+
+Delay: Cycle delay in milliseconds (e.g., 2 for 2 ms).
+
+ROM: Path to the CHIP8 ROM file you want to run.
 
 ## Keyboard Controls
 The emulator supports the following keyboard controls:
