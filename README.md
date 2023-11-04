@@ -1,5 +1,6 @@
 # CHIP8 Emulator
 ![chip8_breakout](https://github.com/rooren/Chip8_emulator/assets/58310236/fff982a5-359b-4d5a-8567-aeac7907da0a)
+![chip8_tetris](https://github.com/rooren/Chip8_emulator/assets/58310236/f32b937b-d7d5-48bb-9220-21868e300e07)
 
 A simple CHIP8 emulator written in C++ with SDL2.
 
