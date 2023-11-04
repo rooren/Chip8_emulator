@@ -85,7 +85,7 @@ Table0 - The first three digits are $00E but the fourth digit is unique:
 
 +-----+     +-------+       +---------+
 | 0x0 | --> | Table0 | --> | OP_00E0  |
-  							+---------+
+                                                        +---------+
 | 0xE | --> |        | --> | OP_00EE  |
 +-----+     +-------+       +---------+
 | 0x1 | --> | OP_1nnn|
@@ -104,8 +104,8 @@ Table0 - The first three digits are $00E but the fourth digit is unique:
 +-----+     +-------+
 | 0x8 | --> | Table8 | --> | OP_8xy0  |
 +-----+     |        |      +---------+
-								...
-							+---------+
+                                                                ...
+                                                        +---------+
 | 0xE | --> |        | --> | OP_8xyE  |
 +-----+     +-------+       +---------+
 | 0x9 | --> | OP_9xy0|
