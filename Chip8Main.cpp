@@ -31,6 +31,7 @@ int main(int argc, char** argv)
 	bool quit = false;
 	bool SaveState = false;
 	bool LoadState = false;
+	bool LoadWithoutSave = true;
 	Chip8State savedState;
 	while (!quit)
 	{
@@ -42,14 +43,18 @@ int main(int argc, char** argv)
 			savedState = Chip8State(chip8);
 			// Save the savedState object to a file
 			SaveState = false; // Reset the flag
+			LoadWithoutSave = false;
 		}
 
 		// Handle loading state
 		if (LoadState)
 		{
-			// Load the state from a file into savedState
-			chip8.LoadState(savedState);
-			LoadState = false; // Reset the flag
+			// Load the state from a file into savedState if it exists
+			if(!LoadWithoutSave)
+			{
+				chip8.LoadState(savedState);
+				LoadState = false; // Reset the flag
+			}
 		}
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
