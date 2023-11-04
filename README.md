@@ -51,9 +51,9 @@ The emulator supports the following keyboard controls:
 
 Keyboard Keys: 1, 2, 3, C, 4, 5, 6, D, 7, 8, 9, E, A, 0, B, F
 
-Pause: P
+Save state: K
 
-Reset: R
+Load state: L
 
 ## Save State
 The CHIP8 emulator supports saving and loading emulator states. To use this feature, follow these steps:
