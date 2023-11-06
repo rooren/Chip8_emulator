@@ -1,4 +1,6 @@
 # CHIP8 Emulator
+![chip8_breakout](https://github.com/rooren/Chip8_emulator/assets/58310236/fff982a5-359b-4d5a-8567-aeac7907da0a)
+![chip8_tetris](https://github.com/rooren/Chip8_emulator/assets/58310236/f32b937b-d7d5-48bb-9220-21868e300e07)
 
 A simple CHIP8 emulator written in C++ with SDL2.
 
@@ -38,19 +40,22 @@ To run a CHIP8 ROM, use the following command, replacing <ROM> with the path to 
 
 ```shell
 ./chip8 <Scale> <Delay> <ROM>
-<Scale>: Scaling factor for the emulator window (e.g., 5 for 5x scale).
-<Delay>: Cycle delay in milliseconds (e.g., 2 for 2 ms).
-<ROM>: Path to the CHIP8 ROM file you want to run.
 ```
+
+Scale: Scaling factor for the emulator window (e.g., 5 for 5x scale).
+
+Delay: Cycle delay in milliseconds (e.g., 2 for 2 ms).
+
+ROM: Path to the CHIP8 ROM file you want to run.
 
 ## Keyboard Controls
 The emulator supports the following keyboard controls:
 
-Keyboard Keys: 1, 2, 3, C, 4, 5, 6, D, 7, 8, 9, E, A, 0, B, F
+Keyboard Keys: 1, 2, 3, 4, 5, 6, 7, 8, 9, E, Q, R, V, F
 
-Pause: P
+Save state: K
 
-Reset: R
+Load state: L
 
 ## Save State
 The CHIP8 emulator supports saving and loading emulator states. To use this feature, follow these steps:
@@ -62,6 +67,7 @@ To load a previously saved state, press the 'L' key.
 ## Logging
 The emulator includes logging functionality for debugging. It outputs information about the executed CHIP8 instructions to the console.
 To enable or disable logging, modify the DEBUG_OUTPUT definition in the source code (under chip8.cpp).
+![image](https://github.com/rooren/Chip8_emulator/assets/58310236/d9dc0390-4959-4d87-9283-205a28d93654)
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
