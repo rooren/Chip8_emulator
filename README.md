@@ -72,7 +72,7 @@ To enable or disable logging, modify the DEBUG_OUTPUT definition in the source c
 ![image](https://github.com/rooren/Chip8_emulator/assets/58310236/d9dc0390-4959-4d87-9283-205a28d93654)
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
 
 Feel free to contribute or report issues. Happy CHIP8 gaming!
 
