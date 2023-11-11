@@ -16,9 +16,8 @@ public:
   uint32_t video[64 * 32]{};
   uint16_t opcode;
 
-
-// Default constructor
-Chip8State() = default;
-// Constructor that takes a Chip8 instance and saves its state
-Chip8State(const Chip8& chip8);
+  // Default constructor
+  Chip8State() = default;
+  // Constructor that takes a Chip8 instance and saves its state
+  Chip8State(const Chip8 &chip8);
 };
